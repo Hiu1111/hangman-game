@@ -1,0 +1,379 @@
+/* Hangman — graph-paper notebook look.
+   One bold moment: the figure is drawn in pencil strokes on each miss.
+   Everything else stays quiet. */
+
+:root {
+  --page: #e6ecf2;
+  --sheet: #fcfdfe;
+  --grid: #dce6f0;
+  --ink: #2b2f36;
+  --ink-soft: #5d6470;
+  --blue: #2550a8;
+  --blue-wash: #e3ebf9;
+  --red: #c8403a;
+  --red-wash: #fbe9e7;
+  --green: #2f7a4c;
+  --green-wash: #e3f2e8;
+  --line: #c7d3e0;
+
+  --hand: "Kalam", "Segoe Print", "Bradley Hand", "Chalkboard SE", system-ui, sans-serif;
+  --text: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --radius: 6px;
+  --gutter: clamp(16px, 4vw, 40px);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: clamp(0px, 3vw, 40px) clamp(0px, 3vw, 40px);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ----- the sheet ----------------------------------------------------- */
+
+.sheet {
+  position: relative;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: var(--gutter) var(--gutter) var(--gutter) calc(var(--gutter) + 28px);
+  background-color: var(--sheet);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: -1px -1px;
+  box-shadow: 0 1px 0 var(--line), 0 12px 32px -18px rgba(37, 80, 168, 0.35);
+}
+
+/* red margin line, like a school notebook */
+.sheet::before {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0;
+  left: calc(var(--gutter) + 10px);
+  width: 2px;
+  background: var(--red);
+  opacity: 0.55;
+}
+
+@media (min-width: 720px) {
+  .sheet { border-radius: var(--radius); }
+}
+
+/* ----- header -------------------------------------------------------- */
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-bottom: clamp(16px, 3vw, 32px);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--hand);
+  font-weight: 700;
+  font-size: clamp(2.25rem, 6vw, 3.25rem);
+  line-height: 1;
+  color: var(--ink);
+  transform: rotate(-1.5deg);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.difficulty {
+  display: inline-flex;
+  margin: 0;
+  padding: 3px;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--sheet);
+}
+
+.difficulty label { position: relative; }
+
+.difficulty input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.difficulty span {
+  display: block;
+  padding: 7px 14px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.difficulty input:checked + span {
+  background: var(--ink);
+  color: var(--sheet);
+}
+
+.difficulty input:focus-visible + span {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.new-game {
+  padding: 10px 18px;
+  border: 1.5px solid var(--blue);
+  border-radius: var(--radius);
+  background: var(--blue);
+  color: #fff;
+  font-weight: 700;
+}
+
+.new-game:hover { background: #1d428e; }
+.new-game:disabled { opacity: 0.6; cursor: progress; }
+
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+/* ----- board layout -------------------------------------------------- */
+
+.board {
+  display: grid;
+  grid-template-columns: minmax(200px, 340px) 1fr;
+  gap: clamp(16px, 4vw, 48px);
+  align-items: start;
+}
+
+@media (max-width: 719px) {
+  .board { grid-template-columns: 1fr; }
+}
+
+/* ----- drawing ------------------------------------------------------- */
+
+.gallows {
+  margin: 0;
+  width: 100%;
+  max-width: 340px;
+  justify-self: center;
+}
+
+@media (max-width: 719px) {
+  .gallows { max-width: 190px; }
+}
+
+.gallows svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.frame path {
+  stroke: var(--ink);
+  stroke-width: 4;
+}
+
+.part {
+  stroke: var(--ink);
+  stroke-width: 3.5;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+}
+
+.part.shown {
+  opacity: 1;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.55s ease-out;
+}
+
+.sheet.lost .part.shown { stroke: var(--red); }
+
+/* ----- play area ----------------------------------------------------- */
+
+.play { min-width: 0; }
+
+.meta {
+  margin: 0 0 8px;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+/* The word always fits on one line: tiles share the row width, and the
+   letter size follows the tile width (--len is set by app.js). */
+.word {
+  --len: 6;
+  container-type: inline-size;
+  display: flex;
+  gap: clamp(4px, 1.5vw, 10px);
+  max-width: calc(var(--len) * 3.4rem);
+  margin: 0 0 20px;
+  min-height: 3.6rem;
+}
+
+.tile {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 3.6rem;
+  border-bottom: 3px solid var(--ink);
+  font-family: var(--hand);
+  font-weight: 700;
+  font-size: min(2.6rem, calc(85cqi / var(--len)));
+  line-height: 1.1;
+  color: var(--blue);
+  text-transform: uppercase;
+}
+
+.sheet.won .tile { color: var(--green); border-color: var(--green); }
+.tile.revealed { color: var(--red); }
+
+.lives {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.lives-count {
+  font-family: var(--hand);
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.lives.low .lives-count { color: var(--red); }
+
+.lives-label { color: var(--ink-soft); }
+
+.letters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+  margin: 0 0 16px;
+}
+
+.letters dt {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.letters dd {
+  margin: 2px 0 0;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  overflow-wrap: anywhere;
+}
+
+.letters dd.empty { letter-spacing: 0; color: var(--ink-soft); font-style: italic; }
+.letters .missed:not(.empty) { color: var(--red); text-decoration: line-through; }
+
+.message {
+  min-height: 1.5em;
+  margin: 0 0 16px;
+  font-weight: 700;
+}
+
+.message.win { color: var(--green); }
+.message.loss { color: var(--red); }
+.message.error { color: var(--red); font-weight: 400; }
+
+.message:not(:empty) {
+  padding: 10px 14px;
+  border-left: 4px solid currentColor;
+  background: var(--sheet);
+}
+
+.message.win:not(:empty) { background: var(--green-wash); }
+.message.loss:not(:empty), .message.error:not(:empty) { background: var(--red-wash); }
+
+/* ----- keyboard ------------------------------------------------------ */
+
+.keyboard {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 6px;
+  max-width: 560px;
+}
+
+@media (max-width: 480px) {
+  .keyboard { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+}
+
+.key {
+  min-height: 44px;
+  padding: 0;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--sheet);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+}
+
+.key:hover:not(:disabled) { background: var(--blue-wash); border-color: var(--blue); }
+
+.key:disabled { cursor: default; }
+
+.key.hit {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+
+.key.miss {
+  background: var(--red-wash);
+  border-color: var(--red);
+  color: var(--red);
+  text-decoration: line-through;
+}
+
+.key:disabled:not(.hit):not(.miss) { opacity: 0.45; }
+
+.hint {
+  margin: 12px 0 0;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+/* ----- motion preferences ------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .part.shown { transition: none; }
+}

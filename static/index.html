@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hangman</title>
+  <meta name="description" content="Play Hangman in your browser. Pick a difficulty and guess the word one letter at a time.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <main class="sheet">
+    <header class="top">
+      <h1 class="title">Hangman</h1>
+
+      <form class="controls" id="new-game-form">
+        <fieldset class="difficulty">
+          <legend class="visually-hidden">Difficulty</legend>
+          <label><input type="radio" name="difficulty" value="easy" checked><span>Easy</span></label>
+          <label><input type="radio" name="difficulty" value="medium"><span>Medium</span></label>
+          <label><input type="radio" name="difficulty" value="hard"><span>Hard</span></label>
+        </fieldset>
+        <button type="submit" class="new-game" id="new-game">New game</button>
+      </form>
+    </header>
+
+    <div class="board">
+      <figure class="gallows" aria-hidden="true">
+        <svg viewBox="0 0 200 230" id="drawing">
+          <g class="frame">
+            <path d="M20 215 H120" />
+            <path d="M50 215 V20" />
+            <path d="M50 20 H140" />
+            <path d="M50 55 L85 20" />
+            <path d="M140 20 V45" />
+          </g>
+          <g class="figure">
+            <circle class="part" data-part="1" cx="140" cy="64" r="19" pathLength="1" />
+            <path class="part" data-part="2" d="M140 83 V145" pathLength="1" />
+            <path class="part" data-part="3" d="M140 98 L114 126" pathLength="1" />
+            <path class="part" data-part="4" d="M140 98 L166 126" pathLength="1" />
+            <path class="part" data-part="5" d="M140 145 L118 185" pathLength="1" />
+            <path class="part" data-part="6" d="M140 145 L162 185" pathLength="1" />
+          </g>
+        </svg>
+      </figure>
+
+      <section class="play" aria-label="Game">
+        <p class="meta" id="meta">Starting a game…</p>
+
+        <p class="word" id="word" aria-live="polite" aria-atomic="true"></p>
+
+        <div class="lives" id="lives" aria-live="polite">
+          <span class="lives-count" id="lives-count">6</span>
+          <span class="lives-label" id="lives-label">wrong guesses left</span>
+        </div>
+
+        <dl class="letters">
+          <div>
+            <dt>Guessed</dt>
+            <dd id="guessed">None yet</dd>
+          </div>
+          <div>
+            <dt>Missed</dt>
+            <dd id="missed" class="missed">None yet</dd>
+          </div>
+        </dl>
+
+        <p class="message" id="message" role="status" aria-live="polite"></p>
+
+        <div class="keyboard" id="keyboard" role="group" aria-label="Letters"></div>
+        <p class="hint">Click a letter or type it on your keyboard.</p>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

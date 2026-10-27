@@ -11,6 +11,8 @@ Endpoints:
 
 Every /api response is JSON, including errors: {"error": "<message>"}.
 
+The browser client is served at / (static/index.html, style.css, app.js).
+
 Run locally:
     python3 server.py
 """
@@ -57,6 +59,11 @@ def create_app(word_manager=None):
         return body if isinstance(body, dict) else None
 
     # ----- routes ------------------------------------------------------------
+
+    @app.get("/")
+    def index():
+        """Serve the browser client. Static assets are served from /static/."""
+        return app.send_static_file("index.html")
 
     @app.post("/api/games")
     def create_game():

@@ -108,24 +108,27 @@ The specification leaves these open. They are decided here so every phase uses t
 
 ## Phase 4 — Browser Client
 
-- [ ] Create `static/index.html`, `static/style.css`, `static/app.js`.
-- [ ] Serve `index.html` from Flask at `/`.
-- [ ] Add a difficulty selector (Easy / Medium / Hard).
-- [ ] Add a New Game button.
-- [ ] Display the masked pattern.
-- [ ] Display guessed letters and incorrect letters.
-- [ ] Display remaining incorrect guesses.
-- [ ] Add an on-screen A–Z keyboard.
-- [ ] Support physical keyboard input.
-- [ ] Disable letters that have already been guessed.
-- [ ] Use `fetch()` for every game action; update the page from the JSON response.
-- [ ] Draw the hangman (SVG or HTML) and add one part per incorrect guess.
-- [ ] Show a win or loss message, including the revealed word.
-- [ ] Disable guessing after the game ends.
-- [ ] Start a new game without reloading the page.
-- [ ] Show API errors to the user instead of failing silently.
-- [ ] Make the layout usable on desktop and mobile widths.
-- [ ] Confirm no hidden word is stored in browser JavaScript during play.
+- [x] Create `static/index.html`, `static/style.css`, `static/app.js`.
+- [x] Serve `index.html` from Flask at `/`.
+- [x] Add a difficulty selector (Easy / Medium / Hard).
+- [x] Add a New Game button.
+- [x] Display the masked pattern.
+- [x] Display guessed letters and incorrect letters.
+- [x] Display remaining incorrect guesses.
+- [x] Add an on-screen A–Z keyboard.
+- [x] Support physical keyboard input.
+- [x] Disable letters that have already been guessed.
+- [x] Use `fetch()` for every game action; update the page from the JSON response.
+- [x] Draw the hangman (SVG or HTML) and add one part per incorrect guess.
+- [x] Show a win or loss message, including the revealed word.
+- [x] Disable guessing after the game ends.
+- [x] Start a new game without reloading the page.
+- [x] Show API errors to the user instead of failing silently.
+- [x] Make the layout usable on desktop and mobile widths.
+- [x] Confirm no hidden word is stored in browser JavaScript during play.
+
+> Tests: `tests/test_browser_client.py` (always runs) and `tests/test_e2e_browser.py`
+> (real Chromium via Playwright; skipped automatically if Playwright is not installed).
 
 **Done when:** a full game can be played in the browser, and all game decisions come from the server.
 
