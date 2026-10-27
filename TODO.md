@@ -86,18 +86,21 @@ The specification leaves these open. They are decided here so every phase uses t
 
 ## Phase 3 — Flask Server and REST API
 
-- [ ] Create `server.py` with a Flask app object named `app`.
-- [ ] Store active games in memory, keyed by a unique game ID.
-- [ ] `POST /api/games` — create a game from `{"difficulty": "easy|medium|hard"}`; return `201`.
-- [ ] `GET /api/games/{game_id}` — return the current state; `200`.
-- [ ] `POST /api/games/{game_id}/guess` — submit `{"letter": "e"}`; return updated state; `200`.
-- [ ] Validate difficulty and letter input (`400` on bad input).
-- [ ] Return `404` for unknown game IDs.
-- [ ] Return `400` for malformed or non-JSON request bodies.
-- [ ] Return JSON for every response, including errors (e.g. `{"error": "..."}`).
-- [ ] Confirm `word` never appears in any response while status is `playing`.
-- [ ] Write API tests in `tests/test_server.py` using Flask's test client.
-- [ ] Verify a full game can be played with `curl`.
+- [x] Create `server.py` with a Flask app object named `app`.
+- [x] Store active games in memory, keyed by a unique game ID.
+- [x] `POST /api/games` — create a game from `{"difficulty": "easy|medium|hard"}`; return `201`.
+- [x] `GET /api/games/{game_id}` — return the current state; `200`.
+- [x] `POST /api/games/{game_id}/guess` — submit `{"letter": "e"}`; return updated state; `200`.
+- [x] Validate difficulty and letter input (`400` on bad input).
+- [x] Return `404` for unknown game IDs.
+- [x] Return `400` for malformed or non-JSON request bodies.
+- [x] Return JSON for every response, including errors (e.g. `{"error": "..."}`).
+- [x] Confirm `word` never appears in any response while status is `playing`.
+- [x] Write API tests in `tests/test_server.py` using Flask's test client.
+- [x] Verify a full game can be played with `curl`.
+
+> Note for the README (Phase 7): every game response returns the full state plus `game_id` and
+> `difficulty`. This is a superset of the spec's example responses, so all three endpoints share one shape.
 
 **Done when:** a complete game can be won or lost using only HTTP requests.
 
