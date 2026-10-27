@@ -138,24 +138,43 @@ The specification leaves these open. They are decided here so every phase uses t
 
 Automated:
 
-- [ ] Run the full test suite and confirm everything passes.
-- [ ] Test starting games at all three difficulties.
-- [ ] Test correct and incorrect guesses.
-- [ ] Test duplicate and invalid guesses.
-- [ ] Test win and loss paths.
-- [ ] Test starting a new game after one ends.
-- [ ] Test invalid API requests (bad difficulty, bad letter, unknown ID, malformed JSON).
-- [ ] Test that `word` is hidden during play and revealed after the game ends.
+- [x] Run the full test suite and confirm everything passes.
+- [x] Test starting games at all three difficulties.
+- [x] Test correct and incorrect guesses.
+- [x] Test duplicate and invalid guesses.
+- [x] Test win and loss paths.
+- [x] Test starting a new game after one ends.
+- [x] Test invalid API requests (bad difficulty, bad letter, unknown ID, malformed JSON).
+- [x] Test that `word` is hidden during play and revealed after the game ends.
 
 Manual (browser):
 
-- [ ] Play several full games locally, including at least one win and one loss.
-- [ ] Verify the drawing, letters, and messages update after each guess.
-- [ ] In Chrome DevTools (Network tab), inspect a guess request and its JSON response.
-- [ ] Be able to explain the flow: click → `fetch()` → Flask → JSON → page update.
-- [ ] Fix any bugs found and re-run the tests.
+- [x] Play several full games locally, including at least one win and one loss.
+- [x] Verify the drawing, letters, and messages update after each guess.
+- [ ] In Chrome DevTools (Network tab), inspect a guess request and its JSON response. *(do this yourself; it is part of the demo video)*
+- [ ] Be able to explain the flow: click → `fetch()` → Flask → JSON → page update. *(do this yourself)*
+- [x] Fix any bugs found and re-run the tests.
 
 **Done when:** all automated tests pass, and manual browser testing finds no open bugs.
+
+### Phase 5 results
+
+- 113 tests pass (14 of them drive real Chromium; they skip if Playwright is not installed). Line coverage: 98%.
+- Every requirement in assignment sections 3A–3D maps to at least one passing test (32 requirements, 42 tests).
+- Exploratory checks found no functional bugs:
+  - API fuzzing: 400 random and malformed requests produced no 5xx errors and no non-JSON responses.
+  - 26 simultaneous guesses on one game stayed consistent.
+  - 300 parallel games never leaked the word.
+  - 60 games with the real word lists played in Chromium kept the page in sync with the server after every guess.
+  - Keyboard-only play, starting a new game mid-request, and double-clicking New game all behaved correctly.
+- Hardening fixes, each with a regression test:
+  - The in-memory game store is capped at 10,000 games; the oldest is dropped first.
+  - Request bodies over 1 KB are rejected with a JSON 413.
+  - Crashes now have a test confirming they return a generic JSON 500 without internal details.
+- Known limitations (for the README):
+  - Games are in memory, so a server restart or Render sleep ends them. The page tells the player to start a new game.
+  - Refreshing the page starts a new game.
+  - The handwritten font loads from Google Fonts; offline, a fallback font is used.
 
 ---
 

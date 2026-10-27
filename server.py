@@ -28,11 +28,19 @@ from game import HangmanGame, InvalidGuessError
 from word_manager import InvalidDifficultyError, WordManager
 
 
+# Games live in memory. Once this many exist, the oldest is dropped so a
+# public server cannot run out of memory. A dropped game returns 404.
+MAX_GAMES = 10_000
+
+# Request bodies are tiny ({"letter": "e"}); anything bigger is rejected (413).
+MAX_BODY_BYTES = 1024
+
+
 def json_error(message, status):
     return jsonify({"error": message}), status
 
 
-def create_app(word_manager=None):
+def create_app(word_manager=None, max_games=MAX_GAMES):
     """Build a Flask app with its own in-memory game store.
 
     Tests pass a WordManager with a seeded random generator or a small word
@@ -40,9 +48,10 @@ def create_app(word_manager=None):
     """
     app = Flask(__name__)
     app.json.sort_keys = False  # keep response fields in a readable order
+    app.config["MAX_CONTENT_LENGTH"] = MAX_BODY_BYTES
 
     words = word_manager if word_manager is not None else WordManager()
-    games = {}  # game_id -> {"game": HangmanGame, "difficulty": str}
+    games = {}  # game_id -> {"game": HangmanGame, "difficulty": str}, oldest first
     lock = threading.Lock()  # guards games and every guess
 
     def game_response(game_id):
@@ -83,6 +92,8 @@ def create_app(word_manager=None):
                 "game": HangmanGame(word),
                 "difficulty": body["difficulty"].strip().lower(),
             }
+            while len(games) > max_games:
+                del games[next(iter(games))]  # dicts keep insertion order
             response = game_response(game_id)
         return jsonify(response), 201
 

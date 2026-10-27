@@ -281,6 +281,44 @@ class ProtocolTests(ApiTestCase):
                 self.assertTrue(response.is_json)
 
 
+class HardeningTests(ApiTestCase):
+    """Protections for running on a public server (added in Phase 5)."""
+
+    def test_oversized_body_is_rejected_with_json_413(self):
+        big = {"difficulty": "easy", "padding": "x" * 5000}
+        self.assert_error(self.client.post("/api/games", json=big), 413)
+        game_id = self.create()["game_id"]
+        self.assert_error(self.client.post(f"/api/games/{game_id}/guess",
+                                           json={"letter": "a", "pad": "x" * 5000}), 413)
+        state = self.client.get(f"/api/games/{game_id}").get_json()
+        self.assertEqual(state["guessed_letters"], [])
+
+    def test_normal_bodies_are_well_under_the_limit(self):
+        self.assertEqual(self.client.post("/api/games", json={"difficulty": "medium"}).status_code, 201)
+
+    def test_game_store_is_capped_and_drops_oldest(self):
+        words_dir = pathlib.Path(self._tmp.name)
+        client = create_app(WordManager(words_dir), max_games=3).test_client()
+        ids = [client.post("/api/games", json={"difficulty": "easy"}).get_json()["game_id"]
+               for _ in range(5)]
+        for old in ids[:2]:
+            self.assert_error(client.get(f"/api/games/{old}"), 404)
+        for recent in ids[2:]:
+            self.assertEqual(client.get(f"/api/games/{recent}").status_code, 200)
+
+    def test_unexpected_error_returns_json_500_without_details(self):
+        class BrokenWords:
+            def random_word(self, difficulty):
+                raise RuntimeError("secret internal detail")
+
+        app = create_app(BrokenWords())
+        app.logger.disabled = True
+        response = app.test_client().post("/api/games", json={"difficulty": "easy"})
+        body = self.assert_error(response, 500)
+        self.assertEqual(body["error"], "internal server error")
+        self.assertNotIn("secret", response.get_data(as_text=True))
+
+
 class RealWordListTests(unittest.TestCase):
     def test_default_app_loads_real_lists(self):
         from server import app

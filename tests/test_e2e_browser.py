@@ -10,6 +10,7 @@ They need Playwright (optional, not in requirements.txt):
 If Playwright is not installed, these tests are skipped.
 """
 
+import logging
 import pathlib
 import tempfile
 import threading
@@ -38,6 +39,7 @@ class BrowserGameTests(unittest.TestCase):
             (words_dir / f"{difficulty}.txt").write_text(word + "\n")
         app = create_app(WordManager(words_dir))
 
+        logging.getLogger("werkzeug").setLevel(logging.ERROR)  # no per-request lines in test output
         cls.server = make_server("127.0.0.1", 0, app, threaded=True)
         cls.base_url = f"http://127.0.0.1:{cls.server.server_port}"
         cls.thread = threading.Thread(target=cls.server.serve_forever, daemon=True)
