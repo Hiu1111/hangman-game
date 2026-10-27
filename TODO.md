@@ -72,13 +72,13 @@ The specification leaves these open. They are decided here so every phase uses t
 
 ## Phase 2 — Word Management
 
-- [ ] Create a word-loading module (e.g. `word_manager.py`).
-- [ ] Load the Easy, Medium, and Hard lists.
-- [ ] Normalize to lowercase, skip blank lines, remove duplicates.
-- [ ] Reject non-alphabetic entries.
-- [ ] Select a random word by difficulty.
-- [ ] Raise a clear error for an invalid difficulty.
-- [ ] Write tests in `tests/test_word_manager.py`.
+- [x] Create a word-loading module (e.g. `word_manager.py`).
+- [x] Load the Easy, Medium, and Hard lists.
+- [x] Normalize to lowercase, skip blank lines, remove duplicates.
+- [x] Reject non-alphabetic entries.
+- [x] Select a random word by difficulty.
+- [x] Raise a clear error for an invalid difficulty.
+- [x] Write tests in `tests/test_word_manager.py`.
 
 **Done when:** a random word can be requested reliably for each difficulty, and invalid difficulties are rejected.
 
