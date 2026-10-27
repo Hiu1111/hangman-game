@@ -180,14 +180,15 @@ Manual (browser):
 
 ## Phase 6 — Cloud Deployment
 
-- [ ] Add `gunicorn` to `requirements.txt`.
-- [ ] Make sure production does not run with `debug=True`.
-- [ ] Test locally: `gunicorn --bind 127.0.0.1:5000 --workers 1 server:app`.
-- [ ] Add deployment config (e.g. `render.yaml`) or record the Render dashboard settings.
+- [x] Add `gunicorn` to `requirements.txt`.
+- [x] Make sure production does not run with `debug=True`.
+- [x] Test locally with Gunicorn (rehearsed Render's build and start command in a fresh environment with `$PORT` set).
+- [x] Add deployment config: `render.yaml` (Blueprint) and `.python-version` (3.13).
+- [x] Add `tests/test_deploy.py` to guard the deployment config.
 - [ ] Push to GitHub.
-- [ ] Create the Render web service from the GitHub repo:
+- [ ] Create the Render web service from the GitHub repo (New → Blueprint), which uses `render.yaml`:
   - Build: `pip install -r requirements.txt`
-  - Start: `gunicorn --bind 0.0.0.0:$PORT --workers 1 server:app`
+  - Start: `gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 4 --access-logfile - server:app`
 - [ ] Open the public HTTPS URL and play a complete game.
 - [ ] Verify the API endpoints work on the deployed URL.
 - [ ] Note free-tier limits (sleep after idle, cold starts, in-memory reset) in the README.

@@ -1,0 +1,22 @@
+# Render Blueprint for the Hangman web app.
+# Docs: https://render.com/docs/blueprint-spec
+#
+# Deploy: Render dashboard -> New -> Blueprint -> pick this GitHub repo -> Apply.
+#
+# Why one worker: games are stored in memory inside the Python process.
+# A second worker would have its own separate set of games, so a guess could
+# reach a worker that has never heard of the game (404). Threads share memory,
+# so --threads lets several players be served at once safely (server.py
+# guards the game store with a lock).
+
+services:
+  - type: web
+    name: hangman
+    runtime: python
+    plan: free
+    region: virginia            # closest to Connecticut; cannot be changed later
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 4 --access-logfile - server:app
+    healthCheckPath: /
+    autoDeployTrigger: commit   # redeploy on every push to the connected branch
+    # Python version comes from .python-version (3.13, the version the tests run on).
