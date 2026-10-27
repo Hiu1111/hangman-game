@@ -53,18 +53,18 @@ The specification leaves these open. They are decided here so every phase uses t
 
 ## Phase 1 — Game Engine
 
-- [ ] Create `game.py` with a `HangmanGame` class (no Flask imports).
-- [ ] Store the hidden word privately.
-- [ ] Track guessed letters and incorrect letters.
-- [ ] Track remaining incorrect guesses (max 6).
-- [ ] Validate guesses: single letter `a`–`z` only.
-- [ ] Reject duplicate guesses.
-- [ ] Generate the masked pattern.
-- [ ] Detect wins and losses.
-- [ ] Reject guesses after the game has ended.
-- [ ] Provide a client-safe state method (`pattern`, `guessed_letters`, `incorrect_letters`, `remaining_guesses`, `status`).
-- [ ] Include `word` in the state only after the game ends.
-- [ ] Write unit tests in `tests/test_game.py`.
+- [x] Create `game.py` with a `HangmanGame` class (no Flask imports).
+- [x] Store the hidden word privately.
+- [x] Track guessed letters and incorrect letters.
+- [x] Track remaining incorrect guesses (max 6).
+- [x] Validate guesses: single letter `a`–`z` only.
+- [x] Reject duplicate guesses.
+- [x] Generate the masked pattern.
+- [x] Detect wins and losses.
+- [x] Reject guesses after the game has ended.
+- [x] Provide a client-safe state method (`pattern`, `guessed_letters`, `incorrect_letters`, `remaining_guesses`, `status`).
+- [x] Include `word` in the state only after the game ends.
+- [x] Write unit tests in `tests/test_game.py`.
 
 **Done when:** a full game can be played and tested without any web server.
 
