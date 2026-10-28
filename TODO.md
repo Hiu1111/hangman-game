@@ -45,7 +45,7 @@ The specification leaves these open. They are decided here so every phase uses t
 - [x] Add `.gitignore` (Python caches, virtualenvs, `.env`, `.DS_Store`).
 - [x] Add `requirements.txt` (Flask).
 - [x] Initialize a local git repository on branch `main` and make the initial commit.
-- [ ] Create the GitHub repository, add it as `origin`, and push.
+- [x] Create the GitHub repository, add it as `origin`, and push.
 
 **Done when:** the repo is on GitHub with the spec, TODO, and word lists.
 
@@ -185,13 +185,14 @@ Manual (browser):
 - [x] Test locally with Gunicorn (rehearsed Render's build and start command in a fresh environment with `$PORT` set).
 - [x] Add deployment config: `render.yaml` (Blueprint) and `.python-version` (3.13).
 - [x] Add `tests/test_deploy.py` to guard the deployment config.
-- [ ] Push to GitHub.
-- [ ] Create the Render web service from the GitHub repo (New → Blueprint), which uses `render.yaml`:
+- [x] Push to GitHub.
+- [x] Create the Render web service from the GitHub repo (New → Blueprint), which uses `render.yaml`:
   - Build: `pip install -r requirements.txt`
   - Start: `gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 4 --access-logfile - server:app`
-- [ ] Open the public HTTPS URL and play a complete game.
-- [ ] Verify the API endpoints work on the deployed URL.
-- [ ] Note free-tier limits (sleep after idle, cold starts, in-memory reset) in the README.
+  - Live at **https://hangman-1xvr.onrender.com/** (home page confirmed serving the app).
+- [ ] Open the public HTTPS URL and play a complete game. *(you are testing this yourself)*
+- [ ] Verify the API endpoints work on the deployed URL. *(you are testing this yourself)*
+- [x] Note free-tier limits (sleep after idle, cold starts, in-memory reset) in the README.
 
 **Done when:** the app is playable at a public HTTPS URL, with no local server running.
 
@@ -199,15 +200,15 @@ Manual (browser):
 
 ## Phase 7 — Documentation and Submission
 
-- [ ] Write `README.md`:
+- [x] Write `README.md`:
   - Project overview
   - Local install and run instructions
   - REST API summary with example requests and responses
   - How to run the tests
   - Deployed URL
   - Known limitations and deviations from the specification
-- [ ] Confirm the repo contains: engine, server, frontend, word lists, original spec, updated TODO, dependency and deploy config, tests, and README.
-- [ ] Confirm no credentials or secrets are committed.
+- [x] Confirm the repo contains: engine, server, frontend, word lists, original spec, updated TODO, dependency and deploy config, tests, and README.
+- [x] Confirm no credentials or secrets are committed.
 - [ ] Write the 1–2 page development report (PDF):
   - Process
   - Implementation
